@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3001",
     "lint": "next lint",
     "prettier": "prettier --check '**/*.{js,ts,jsx,tsx}'",
     "prettier:write": "prettier --write '**/*.{js,ts,jsx,tsx}'"
@@ -24,16 +24,18 @@
     "@mui/material": "^5.14.10",
     "@multiversx/sdk-core": "12.18.0",
     "@multiversx/sdk-wallet": "4.2.0",
+    "@mysten/sui": "^1.29.1",
     "@near-wallet-selector/wallet-utils": "^8.0.0",
     "@nextui-org/react": "1.0.8-beta.5",
     "@noble/curves": "^1.6.0",
     "@polkadot/keyring": "^10.1.2",
     "@polkadot/types": "^9.3.3",
     "@reown/appkit-experimental": "1.6.8",
-    "@reown/walletkit": "1.2.3",
+    "@reown/walletkit": "1.2.10",
     "@rhinestone/module-sdk": "0.1.25",
     "@solana/spl-token": "^0.4.13",
-    "@solana/web3.js": "1.89.2",
+    "@solana/web3.js": "1.98.2",
+    "@stacks/wallet-sdk": "^7.0.6",
     "@taquito/signer": "^15.1.0",
     "@taquito/taquito": "^15.1.0",
     "@types/semver": "^7.5.8",
@@ -53,6 +55,7 @@
     "framer-motion": "6.5.1",
     "graphql": "^16.8.2",
     "near-api-js": "^0.45.0",
+    "near-seed-phrase": "^0.2.1",
     "next": "15",
     "permissionless": "0.1.43",
     "react": "18.2.0",
@@ -78,5 +81,13 @@
     "jsonc-eslint-parser": "^2.4.0",
     "prettier": "2.6.2",
     "typescript": "5.2.2"
+  },
+  "resolutions": {
+    "@walletconnect/core": "2.21.8",
+    "@walletconnect/utils": "2.21.8",
+    "@walletconnect/types": "2.21.8",
+    "@walletconnect/sign-client": "2.21.8",
+    "@walletconnect/ethereum-provider": "2.21.8",
+    "@walletconnect/universal-provider": "2.21.8"
   }
 }
