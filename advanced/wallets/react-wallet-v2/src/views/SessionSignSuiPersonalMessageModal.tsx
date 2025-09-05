@@ -1,17 +1,16 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { Col, Divider, Row, Text } from '@nextui-org/react'
+import { useCallback, useState } from 'react'
 
-import RequestDataCard from '@/components/RequestDataCard'
+import RequesDetailsCard from '@/components/RequestDetalilsCard'
 import ModalStore from '@/store/ModalStore'
 import { styledToast } from '@/utils/HelperUtil'
 import { walletkit } from '@/utils/WalletConnectUtil'
 import RequestModal from '../components/RequestModal'
-import { useCallback, useState } from 'react'
-import { approveBip122Request, rejectBip122Request } from '@/utils/Bip122RequestHandlerUtil'
-import { bip122Wallet } from '@/utils/Bip122WalletUtil'
-import { IBip122ChainId } from '@/data/Bip122Data'
+import { suiAddresses } from '@/utils/SuiWalletUtil'
+import { approveSuiRequest, rejectSuiRequest } from '@/utils/SuiRequestHandlerUtil'
 
-export default function SessionGetBip122AddressesModal() {
+export default function SessionSignSuiPersonalMessageModal() {
   // Get request and wallet data from store
   const requestEvent = ModalStore.state.data?.requestEvent
   const requestSession = ModalStore.state.data?.requestSession
@@ -23,26 +22,26 @@ export default function SessionGetBip122AddressesModal() {
     return <Text>Missing request data</Text>
   }
 
+  // Get required request data
   const { topic, params } = requestEvent
   const { request, chainId } = params
-  const account = request.params.account
-  const intentions = request.params.intentions
-  const addresses = bip122Wallet.getAddresses(chainId as IBip122ChainId, intentions)
+
+  const message = request.params?.message || ''
 
   // Handle approve action (logic varies based on request method)
   const onApprove = useCallback(async () => {
-    if (requestEvent) {
-      const response = await approveBip122Request(requestEvent)
-      try {
+    try {
+      if (requestEvent) {
+        setIsLoadingApprove(true)
+        const response = await approveSuiRequest(requestEvent)
         await walletkit.respondSessionRequest({
           topic,
           response
         })
-      } catch (e) {
-        setIsLoadingApprove(false)
-        styledToast((e as Error).message, 'error')
-        return
       }
+    } catch (e) {
+      styledToast((e as Error).message, 'error')
+    } finally {
       setIsLoadingApprove(false)
       ModalStore.close()
     }
@@ -52,7 +51,7 @@ export default function SessionGetBip122AddressesModal() {
   const onReject = useCallback(async () => {
     if (requestEvent) {
       setIsLoadingReject(true)
-      const response = rejectBip122Request(requestEvent)
+      const response = rejectSuiRequest(requestEvent)
       try {
         await walletkit.respondSessionRequest({
           topic,
@@ -68,32 +67,43 @@ export default function SessionGetBip122AddressesModal() {
     }
   }, [requestEvent, topic])
 
-  if (!addresses || addresses.size === 0) {
-    onReject()
-    return <Text>No addresses found</Text>
-  }
-
   return (
     <RequestModal
-      intention="access your BTC addresses"
+      intention="request a signature"
       metadata={requestSession.peer.metadata}
       onApprove={onApprove}
       onReject={onReject}
       approveLoader={{ active: isLoadingApprove }}
       rejectLoader={{ active: isLoadingReject }}
     >
-      {account && (
-        <>
-          <Row>
-            <Col>
-              <Text h5>Addresses for account</Text>
-              <Text color="$gray400">{account}</Text>
-            </Col>
-          </Row>
-          <Divider y={1} />
-        </>
-      )}
-      <RequestDataCard data={Object.fromEntries(addresses.entries())} />
+      <Row>
+        <Col>
+          <Text h5>Sign with Address</Text>
+          <Text color="$gray400" data-testid="request-detauls-realy-protocol">
+            {suiAddresses[0]}
+          </Text>
+        </Col>
+      </Row>
+      <Divider y={1} />
+      <Row>
+        <Col>
+          <Text h5>Method</Text>
+          <Text color="$gray400" data-testid="request-detauls-realy-protocol">
+            {request.method}
+          </Text>
+        </Col>
+      </Row>
+      <Divider y={1} />
+      <RequesDetailsCard chains={[chainId ?? '']} />
+      <Divider y={1} />
+      <Row>
+        <Col>
+          <Text h5>Message</Text>
+          <Text color="$gray400" data-testid="request-message-text">
+            {message}
+          </Text>
+        </Col>
+      </Row>
     </RequestModal>
   )
 }
