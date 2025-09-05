@@ -25,6 +25,8 @@ import WalletCheckoutUtil from '@/utils/WalletCheckoutUtil'
 import WalletCheckoutCtrl from '@/store/WalletCheckoutCtrl'
 import { CheckoutErrorCode } from '@/types/wallet_checkout'
 import { createCheckoutError } from '@/types/wallet_checkout'
+import { SUI_SIGNING_METHODS } from '@/data/SuiData'
+import { STACKS_SIGNING_METHODS } from '@/data/StacksData'
 
 export default function useWalletConnectEventsManager(initialized: boolean) {
   /******************************************************************************
@@ -174,6 +176,25 @@ export default function useWalletConnectEventsManager(initialized: boolean) {
             requestEvent,
             requestSession
           })
+        case SUI_SIGNING_METHODS.SUI_SIGN_PERSONAL_MESSAGE:
+          return ModalStore.open('SessionSignSuiPersonalMessageModal', {
+            requestEvent,
+            requestSession
+          })
+        case SUI_SIGNING_METHODS.SUI_SIGN_TRANSACTION:
+          return ModalStore.open('SessionSignSuiTransactionModal', {
+            requestEvent,
+            requestSession
+          })
+        case SUI_SIGNING_METHODS.SUI_SIGN_AND_EXECUTE_TRANSACTION:
+          return ModalStore.open('SessionSignSuiAndExecuteTransactionModal', {
+            requestEvent,
+            requestSession
+          })
+        case STACKS_SIGNING_METHODS.STACKS_SEND_TRANSFER:
+          return ModalStore.open('SessionSendStacksTransferModal', { requestEvent, requestSession })
+        case STACKS_SIGNING_METHODS.STACKS_SIGN_MESSAGE:
+          return ModalStore.open('SessionSignStacksMessageModal', { requestEvent, requestSession })
         default:
           return ModalStore.open('SessionUnsuportedMethodModal', { requestEvent, requestSession })
       }

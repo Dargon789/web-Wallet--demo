@@ -32,6 +32,8 @@ interface State {
   tezosAddress: string
   kadenaAddress: string
   bip122Address: string
+  suiAddress: string
+  stacksAddress: Record<'mainnet' | 'testnet', string>
   kernelSmartAccountAddress: string
   safeSmartAccountAddress: string
   biconomySmartAccountAddress: string
@@ -68,6 +70,8 @@ const state = proxy<State>({
   tezosAddress: '',
   kadenaAddress: '',
   bip122Address: '',
+  suiAddress: '',
+  stacksAddress: { mainnet: '', testnet: '' },
   kernelSmartAccountAddress: '',
   safeSmartAccountAddress: '',
   biconomySmartAccountAddress: '',
@@ -131,6 +135,12 @@ const SettingsStore = {
   },
   setbip122Address(bip122Address: string) {
     state.bip122Address = bip122Address
+  },
+  setSuiAddress(suiAddress: string) {
+    state.suiAddress = suiAddress
+  },
+  setStacksAddress(chain: 'testnet' | 'mainnet', stacksAddress: string) {
+    state.stacksAddress[chain] = stacksAddress
   },
   setRelayerRegionURL(relayerRegionURL: string) {
     state.relayerRegionURL = relayerRegionURL

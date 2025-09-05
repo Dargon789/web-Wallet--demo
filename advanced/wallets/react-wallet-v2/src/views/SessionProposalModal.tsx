@@ -45,6 +45,11 @@ import {
 } from '@/data/Bip122Data'
 import { EIP7715_METHOD } from '@/data/EIP7715Data'
 import { useRouter } from 'next/router'
+import { SUI_CHAINS, SUI_EVENTS, SUI_SIGNING_METHODS } from '@/data/SuiData'
+import { suiAddresses } from '@/utils/SuiWalletUtil'
+import { STACKS_CHAINS, STACKS_EVENTS, STACKS_SIGNING_METHODS } from '@/data/StacksData'
+import { stacksAddresses, stacksWallet } from '@/utils/StacksWalletUtil'
+import StacksLib from '@/lib/StacksLib'
 
 const StyledText = styled(Text, {
   fontWeight: 400
@@ -116,6 +121,18 @@ export default function SessionProposalModal() {
     const bip122Chains = Object.keys(BIP122_CHAINS)
     const bip122Methods = Object.values(BIP122_SIGNING_METHODS)
     const bip122Events = Object.values(BIP122_EVENTS)
+
+    // sui
+    const suiChains = Object.keys(SUI_CHAINS)
+    const suiMethods = Object.values(SUI_SIGNING_METHODS)
+    const suiEvents = Object.values(SUI_EVENTS)
+
+    // stacks
+    const stacksChains = Object.keys(STACKS_CHAINS)
+    const stacksMethods = Object.values(STACKS_SIGNING_METHODS)
+    const stacksEvents = Object.values(STACKS_EVENTS)
+
+    console.log('stacksAddresses', stacksAddresses)
 
     return {
       eip155: {
@@ -199,6 +216,19 @@ export default function SessionProposalModal() {
         methods: bip122Methods,
         events: bip122Events,
         accounts: bip122Addresses
+      },
+
+      sui: {
+        chains: suiChains,
+        methods: suiMethods,
+        events: suiEvents,
+        accounts: suiChains.map(chain => suiAddresses.map(address => `${chain}:${address}`)).flat()
+      },
+      stacks: {
+        chains: stacksChains,
+        methods: stacksMethods,
+        events: stacksEvents,
+        accounts: stacksAddresses
       }
     }
   }, [addressesToApprove])
@@ -255,7 +285,7 @@ export default function SessionProposalModal() {
       )
   }, [proposal, supportedChains])
   console.log('notSupportedChains', { notSupportedChains, supportedChains })
-  const getAddress = useCallback((namespace?: string) => {
+  const getAddress = useCallback((namespace?: string, chainId?: string) => {
     console.log('getAddress', namespace)
     if (!namespace) return 'N/A'
     switch (namespace) {
@@ -279,6 +309,10 @@ export default function SessionProposalModal() {
         return tronAddresses[0]
       case 'bip122':
         return bip122Addresses[0]
+      case 'sui':
+        return suiAddresses[0]
+      case 'stacks':
+        return stacksWallet.getAddress(`${namespace}:${chainId}`)
     }
   }, [])
 
@@ -402,7 +436,10 @@ export default function SessionProposalModal() {
             supportedChains.map((chain, i) => {
               return (
                 <Row key={i}>
-                  <ChainAddressMini key={i} address={getAddress(chain?.namespace) || 'test'} />
+                  <ChainAddressMini
+                    key={i}
+                    address={getAddress(chain?.namespace, chain?.chainId) || 'test'}
+                  />
                 </Row>
               )
             })) || <Row>Non available</Row>}
