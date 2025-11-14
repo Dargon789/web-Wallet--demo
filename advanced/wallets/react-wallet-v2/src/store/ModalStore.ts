@@ -39,8 +39,11 @@ interface State {
     | 'SessionSignSuiPersonalMessageModal'
     | 'SessionSignSuiTransactionModal'
     | 'SessionSignSuiAndExecuteTransactionModal'
+    | 'SessionGetSuiAccountsModal'
     | 'SessionSendStacksTransferModal'
     | 'SessionSignStacksMessageModal'
+    | 'SessionTonSendMessageModal'
+    | 'SessionTonSignDataModal'
   data?: ModalData
 }
 

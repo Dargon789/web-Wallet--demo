@@ -27,6 +27,7 @@ import { CheckoutErrorCode } from '@/types/wallet_checkout'
 import { createCheckoutError } from '@/types/wallet_checkout'
 import { SUI_SIGNING_METHODS } from '@/data/SuiData'
 import { STACKS_SIGNING_METHODS } from '@/data/StacksData'
+import { TON_SIGNING_METHODS } from '@/data/TonData'
 
 export default function useWalletConnectEventsManager(initialized: boolean) {
   /******************************************************************************
@@ -191,10 +192,19 @@ export default function useWalletConnectEventsManager(initialized: boolean) {
             requestEvent,
             requestSession
           })
+        case SUI_SIGNING_METHODS.SUI_GET_ACCOUNTS:
+          return ModalStore.open('SessionGetSuiAccountsModal', { requestEvent, requestSession })
         case STACKS_SIGNING_METHODS.STACKS_SEND_TRANSFER:
           return ModalStore.open('SessionSendStacksTransferModal', { requestEvent, requestSession })
         case STACKS_SIGNING_METHODS.STACKS_SIGN_MESSAGE:
           return ModalStore.open('SessionSignStacksMessageModal', { requestEvent, requestSession })
+        case TON_SIGNING_METHODS.SIGN_DATA:
+          return ModalStore.open('SessionTonSignDataModal', {
+            requestEvent,
+            requestSession
+          })
+        case TON_SIGNING_METHODS.SEND_MESSAGE:
+          return ModalStore.open('SessionTonSendMessageModal', { requestEvent, requestSession })
         default:
           return ModalStore.open('SessionUnsuportedMethodModal', { requestEvent, requestSession })
       }
