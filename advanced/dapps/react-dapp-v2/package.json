@@ -34,7 +34,7 @@
     "@walletconnect/utils": "2.22.4-canary-auth-3",
     "@reown/appkit": "1.7.5",
     "axios": "^1.0.0",
-    "@mysten/sui": "^1.29.1",
+    "@mysten/sui": "^1.45.1",
     "bitcoinjs-lib": "^6.1.5",
     "bitcoinjs-message": "^2.2.0",
     "blockies-ts": "^1.0.0",
