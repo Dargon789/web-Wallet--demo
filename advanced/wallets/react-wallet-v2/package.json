@@ -44,7 +44,7 @@
     "@stacks/transactions": "^7.2.0",
     "@stacks/wallet-sdk": "^7.0.6",
     "@taquito/local-forging": "^23.0.1",
-    "@taquito/signer": "^17.0.0",
+    "@taquito/signer": "^23.0.0",
     "@taquito/taquito": "^17.0.0",
     "@ton/core": "^0.61.0",
     "@ton/crypto": "^3.3.0",
